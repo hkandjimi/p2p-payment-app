@@ -99,7 +99,7 @@ def process_payment(request:PaymentRequest):
             transaction = {
                 "status": "SUCCESS",
                 "errorCode": None,
-                "transactionId": f"TXN-{request.clientReference.replace('-','').replace('REF','')}",
+                "transactionId": f"TXN{request.clientReference.replace('-','').replace('REF','')}",
                 "message": f"Payment processed successfully. Your new balance N$ {get_balance(request.senderAccountNumber):.2f} "
             }
         else:

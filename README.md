@@ -86,6 +86,8 @@ P2P-PAYMENT-APP
 │   ├── package.json
 │   └── README.md
 │
+├── scenario-screenshots
+│
 └── docker
     └── docker-compose.yml
 ```
@@ -97,7 +99,7 @@ P2P-PAYMENT-APP
 Clone the repository:
 
 ```bash
-git clone https://github.com/your-repository/p2p-payment-app.git
+git clone https://github.com/hkandjimi/p2p-payment-app.git
 cd p2p-payment-app
 ```
 
@@ -389,44 +391,185 @@ http://localhost:4200
 
 # 13. Example Payment Scenario
 
-Example test scenario:
+The following scenarios were used to test the application behaviour and backend validation logic.  
+Each scenario demonstrates how the system responds to different user inputs and validation conditions.
 
-Sender account:
+Screenshots of the Angular UI responses are included for reference.
 
-```
-1234567890
-```
+---
+<ol type="">
 
-Receiver account:
+##  Landing page
 
-```
-1234567892
-```
+This is the entry point for the payment process. The main interface for the person making the payment.
+![Landing page](./scenario-screenshots/landing.png)
 
-Transfer amount:
+## 1. Scenario 1: No Data Entered 
 
-```
-100 NAD
-```
+In this scenario the user submits the form without entering any data.
+Expected behaviour:
+- The frontend sends an empty JSON request (empty fields are removed before submission).
+- The FastAPI backend validates the request and identifies missing required fields.
+- An appropriate validation error is returned.
 
-FastAPI will:
+Example response:
 
-1. Validate accounts
-2. Verify sender balance
-3. Perform transfer
-4. Update Redis balances
-5. Return success response with transaction ID
+![Payment error 1](./scenario-screenshots/ERR001.png)
+
 
 ---
 
-# 14. Purpose of the Project
+## 2. Scenario 2: Incorrect Account Number Format
 
-This project demonstrates:
+In this scenario the sender or receiver account number does not follow the expected format. Expected behaviour:
 
-* Angular–FastAPI API integration
-* backend validation workflows
-* Redis-based persistence
-* HTTP error handling across system layers
-* containerised backend services using Docker
+- Backend validation detects the incorrect format.
+- The transaction is rejected.
 
-The implementation simulates a **minimal P2P payment workflow** intended for educational and demonstration purposes.
+Example response:
+
+![Payment error 2](./scenario-screenshots/ERR002.png)
+
+---
+## 3. Scenario 3: Wrong Currency
+
+The system only supports NAD (Namibian Dollar).
+
+Expected behaviour:
+- Backend validation detects incorrect currency.
+- Transaction is rejected.
+
+Example response:
+
+![Payment error 3](./scenario-screenshots/ERR003.png)
+
+---
+## 4. Scenario 4: Invalid Amount (Negative Value)
+In this scenario the user attempts to transfer a negative value.
+
+Expected behaviour:
+- Backend validation detects the invalid amount.
+- Transaction is rejected.
+
+Example response:
+
+![Payment error 4](./scenario-screenshots/ERR004.png)
+
+---
+## 5. Scenario 5: Insufficient Funds
+
+In this scenario the sender account does not have enough balance to complete the transfer.
+
+Expected behaviour:
+
+- Backend verifies account balance.
+- Transaction is rejected due to insufficient funds and the current balance is displayed.
+
+Example response:
+
+![Payment error 5](./scenario-screenshots/ERR005.png)
+
+---
+## 6. Scenario 6: Reference Too Long
+
+The payment reference field has a maximum allowed length (50).
+
+Expected behaviour:
+- Backend validation detects the long length.
+- Request is rejected.
+
+Example response:
+
+![Payment error 6](./scenario-screenshots/ERR006.png)
+
+---
+## 7. Scenario 7: Invalid Account Number 
+
+In this scenario the account number format is valid, but the account does not exist in Redis. Check is done on both sender and reciever account.
+
+
+Expected behaviour:
+- Redis lookup fails.
+- Backend returns account not found error.
+
+Example response:
+
+![Payment error 7](./scenario-screenshots/ERR007.png)
+
+---
+## 8. Scenario 8: Data Validation
+
+This scenario tests general data validation where multiple fields contain incorrect values types.
+
+Expected behaviour:
+- Backend performs validation checks.
+- Returns the relevant validation error.
+
+Example response:
+![Payment error 8](./scenario-screenshots/ERR008.png)
+
+**ALTERNATIVELY ERROO6-ERR008, COULD ALL BE CONSIDER AS INTERNAL ERRORS(500)**
+
+---
+
+## 9. Scenario 9: Successful Transaction
+
+A valid transaction between two existing accounts, with all required fields supplied and the sender's amount is less than the transfer amount.
+
+Backend processing steps:
+- Validate request fields
+- Verify sender and receiver accounts
+- Confirm sender balance
+- Deduct funds from sender
+- Credit receiver account
+- Generate transaction ID
+- Display sender's new balance
+
+Example response:
+![Payment complete](./scenario-screenshots/transaction_successful.png)
+
+---
+
+## 10. Payment Testing with Postman
+
+The payment endpoint was tested using Postman before integrating the Angular frontend.
+
+Postman was used to verify:
+- API connectivity
+- request validation
+- transaction logic
+- Redis integration
+
+Example request:
+
+`POST` http://localhost:8000/api/p2p-payment
+
+```JSON
+{
+  "clientReference": "REF-20260315-45231",
+  "senderAccountNumber": "1234567890",
+  "receiverAccountNumber": "1234567892",
+  "amount": "100",
+  "currency": "NAD",
+  "reference": "Lunch payment"
+}
+```
+
+Example response:
+![Payment Postman](./scenario-screenshots/Postman_payment.png)
+
+---
+## 10. Account Details with Postman
+
+The account retrieval endpoint was tested to confirm that Redis data is accessible through the API.
+
+Example request:
+
+GET http://localhost:8000/api/p2p-payment/1234567892
+
+Example response:
+![Account Postman](./scenario-screenshots/Postman_account.png)
+
+---
+
+</ol>
