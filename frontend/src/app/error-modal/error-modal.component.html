@@ -1,0 +1,37 @@
+<div class="container">
+<div class="modal-header">
+    <h5 class="modal-title">Payment {{modalTitle}}</h5>
+  
+    <button
+      type="button"
+      class="btn-close danger"
+      aria-label="Close"
+      (click)="modalRef.close()">
+    </button>
+  
+  </div>
+  
+  <div class="modal-body">
+  
+    <div class="mb-2">
+      <strong>Status:</strong> {{ errorData?.status }}
+    </div>
+    <!-- Logic to handle null values from backend and display N/A--> 
+    <div class="mb-2">
+      <strong>Error Code:</strong> {{ errorData?.errorCode || 'N/A' }}
+    </div>
+  
+    <div class="mb-2">
+      <strong>Transaction ID:</strong> {{ errorData?.transactionId || 'N/A' }}
+    </div>
+  
+    <div class="mb-2">
+      <strong>Message:</strong>
+      <div class="alert alert-{{modalType}} mt-2">
+        {{ errorData?.message }}
+      </div>
+    </div>
+  
+  </div>
+</div>
+ 

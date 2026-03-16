@@ -1,0 +1,100 @@
+
+<div class="container mt-5 pt-5">
+
+    <div class="card shadow">
+  
+      <div class="card-header bg-primary text-white">
+        <h4> P2P Payment Demo </h4>
+      </div>
+  
+      <div class="card-body">
+  
+  <form [formGroup]="paymentForm">
+    <div class="row">
+  
+        <div class="col-md-6 mb-3">
+        
+        <label for="senderAccountNumber" class="form-label">Sender Account</label>
+        
+        <input
+        mdbInput
+        type="text" id="senderAccountNumber"
+        formControlName="senderAccountNumber"
+        class="form-control">
+        
+        </div>
+        
+        <div class="col-md-6 mb-3">
+        
+        <label for="receiverAccountNumber" class="form-label">Receiver Account</label>
+        
+        <input
+        mdbInput
+        type="text"
+        id="receiverAccountNumber"
+        formControlName="receiverAccountNumber"
+        class="form-control">
+        
+        </div>
+        
+    </div>
+
+  <div class="row">
+  
+ <div class="col-md-6 mb-3">
+  
+  <label for="currency" class="form-label">Currency</label>
+  
+  <input
+  mdbInput
+  type="text"
+  id="currency"
+  formControlName="currency"
+  class="form-control">
+  
+  </div> 
+  
+  <div class="col-md-6 mb-3">
+  
+  <label for="amount" class="form-label">Amount</label>
+  
+  <input
+  mdbInput
+  type="text"
+  id="amount"
+  formControlName="amount"
+  class="form-control">
+  
+  </div>
+  
+  </div>
+    
+  <div class="mb-3">
+  
+  <label for="reference" class="form-label">Payment Reference</label>
+  
+  <input
+  mdbInput
+  type="text"
+  id="reference"
+  formControlName="reference"
+  class="form-control">
+  
+  </div>
+  
+  <button
+  class="btn btn-success"
+  (click)="submit()">
+  
+  Submit Payment
+  
+  </button>
+  
+  </form>
+
+  </div>
+  
+  </div>
+  
+  </div>
+
