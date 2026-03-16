@@ -565,7 +565,7 @@ The account retrieval endpoint was tested to confirm that Redis data is accessib
 
 Example request:
 
-GET http://localhost:8000/api/p2p-payment/1234567892
+`GET` http://localhost:8000/api/p2p-payment/1234567892
 
 Example response:
 ![Account Postman](./scenario-screenshots/Postman_account.png)
